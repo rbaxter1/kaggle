@@ -28,20 +28,33 @@ def main():
     #X_train = X_train[:,200:202]
     #X_test = X_test[:,200:202]
     
-    enc_temp = np.ones((X_train.shape[1],256)) * [np.arange(0,256,1) for i in range(X_train.shape[1])]
-    #enc_temp = np.transpose(enc_temp)
-    enc = OneHotEncoder()
+    #np.ceil(X_train / 10.0) * 10
     
-    enc.fit(np.transpose(enc_temp))
+    #X_train= np.ceil(X_train / 10.0) * 10
+    #X_test = np.ceil(X_test / 10.0) * 10
+    
+    # there are 784 dimensions (1 for each pixel)
+    # each d has labels 0 to 255
+    # one hot encode for each label
+    labels = np.arange(0,256,1)
+        
+    enc_temp = labels.repeat(X_train.shape[1]).reshape((labels.shape[0], X_train.shape[1]))
+    #m = np.unique(X_train)
+    #enc_temp = np.tile(labels, (labels.shape[0], X_train.shape[1]))#.transpose()
+    #enc_temp = np.ones((X_train.shape[1],np.unique(X_train).shape[1])) * [np.unique(X_train) for i in range(X_train.shape[1])]
+    #enc_temp = np.ones((X_train.shape[1],256)) * [np.arange(0,256,1) for i in range(X_train.shape[1])]
+    #enc_temp = np.transpose(enc_temp)
+    enc = OneHotEncoder(dtype=np.int8)
+    enc.fit(enc_temp)
     enc.n_values_
     enc.feature_indices_
     X_train_enc = enc.transform(X_train).toarray()
     X_test_enc = enc.transform(X_test).toarray()
-    
+
     pipe = Pipeline([('scl', StandardScaler()),
                      ('clf', MLPClassifier(verbose=True))])
     
-    kfold = StratifiedKFold(n_splits=10, shuffle=True).split(X_train_enc, y_train)
+    kfold = StratifiedKFold(n_splits=3, shuffle=True).split(X_train_enc, y_train)
     cv_scores = []
     test_scores = []
     for k, (train, test) in enumerate(kfold):
