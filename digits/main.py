@@ -14,7 +14,8 @@ from time import time
 from sklearn.model_selection import train_test_split, learning_curve
 from sklearn.svm import SVC
 import itertools
-
+from sklearn.preprocessing import OneHotEncoder
+ 
 def plot_series(self, x, y, y_std, y_lab, colors, markers, title, xlab, ylab, filename):
 
     plt.clf()
@@ -233,7 +234,13 @@ def nn():
     Parameters: {'hidden_layer_sizes': (300, 300)}
     '''
     
-    '''
+    enc = OneHotEncoder()
+    enc.fit(X_train)
+    enc.n_values_
+    enc.feature_indices_
+    
+    enc.transform(X_train).toarray()
+
     kfold = StratifiedKFold(n_splits=10, shuffle=True).split(X_train, y_train)
     scores = []
     for k, (train, test) in enumerate(kfold):
@@ -249,7 +256,9 @@ def nn():
     
     pred = pipe.predict(X_test)
     score = pipe.score(X_test, y_test)
-    '''
+    
+    
+    
     #hl = [(800,i) for i in np.arange(100, 900, 100)]
     hl = [(i,) for i in np.arange(100, 2000, 100)]
     train_scores, test_scores = validation_curve(pipe, X_train, y_train, "clf__hidden_layer_sizes", hl, verbose=True, n_jobs=-1)
