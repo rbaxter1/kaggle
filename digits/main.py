@@ -252,7 +252,7 @@ def nn():
     '''
     #hl = [(800,i) for i in np.arange(100, 900, 100)]
     hl = [(i,) for i in np.arange(100, 2000, 100)]
-    train_scores, test_scores = validation_curve(pipe, X_train, y_train, "clf__hidden_layer_sizes", hl, verbose=True)
+    train_scores, test_scores = validation_curve(pipe, X_train, y_train, "clf__hidden_layer_sizes", hl, verbose=True, n_jobs=-1)
     
     train_sizes = np.arange(100, 2000, 100)
     title = "Validation Curve"
