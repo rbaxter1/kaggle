@@ -132,9 +132,12 @@ def nn():
     # split the training data
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.333)
     
-    
     pipe = Pipeline([('scl', StandardScaler()),
-                     ('clf', MLPClassifier(verbose=True, tol=1e-6, hidden_layer_sizes=(800,800)))])
+                     ('clf', MLPClassifier(verbose=True))])
+    
+    
+    #pipe = Pipeline([('scl', StandardScaler()),
+    #                 ('clf', MLPClassifier(verbose=True, tol=1e-6, hidden_layer_sizes=(1800,900,400)))])
     
     #pipe = Pipeline([('scl', StandardScaler()),
     #                 ('clf', SVC(verbose=True))])
@@ -238,11 +241,17 @@ def nn():
         score = pipe.score(X_train[test], y_train[test])
         scores.append(score)
         print('Fold: %s, Class dist.: %s, Acc: %.3f' % (k+1, np.bincount(y_train[train]), score))
+    
+    pipe = Pipeline([('scl', StandardScaler()),
+                     ('clf', MLPClassifier(verbose=True, tol=1e-8, max_iter=63))])
+    pipe.fit(X_train, y_train)
+    
+    
+    pred = pipe.predict(X_test)
+    score = pipe.score(X_test, y_test)
     '''
-    
-    
     #hl = [(800,i) for i in np.arange(100, 900, 100)]
-    hl = [(1800,i) for i in np.arange(100, 2000, 100)]
+    hl = [(i,) for i in np.arange(100, 2000, 100)]
     train_scores, test_scores = validation_curve(pipe, X_train, y_train, "clf__hidden_layer_sizes", hl, verbose=True)
     
     train_sizes = np.arange(100, 2000, 100)
@@ -275,6 +284,7 @@ def nn():
     plt.savefig("vc.png")
     
     # validate against test
+    '''
     train_sizes, train_scores, test_scores = learning_curve(pipe, X_train, y_train, train_sizes=np.arange(0.25, 1.25, 0.25))
         
     title = "Learning Curve"
@@ -303,6 +313,7 @@ def nn():
     
     plt.legend(loc="best")
     plt.show()
+    '''
 
 
     
