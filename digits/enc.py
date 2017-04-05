@@ -60,7 +60,7 @@ def main():
                 clf.fit(X_train_enc[splits[i]], y_train[splits[i]])        
             
             # free memory
-            X_train_enc = None
+            #X_train_enc = None
             
             X_test_enc = enc.transform(X_test).toarray()
             print("scoring: ")
