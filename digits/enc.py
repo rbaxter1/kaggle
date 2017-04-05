@@ -24,7 +24,7 @@ def main():
     X = train.values[:,1:]
     
     # split the training data
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.5)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.333)
     
     #X_train = X_train[:,200:202]
     #X_test = X_test[:,200:202]
@@ -38,26 +38,29 @@ def main():
     # each d has labels 0 to 255
     # one hot encode for each label
     labels = np.arange(0,256,1)
-        
     enc_temp = labels.repeat(X_train.shape[1]).reshape((labels.shape[0], X_train.shape[1]))
-    #m = np.unique(X_train)
-    #enc_temp = np.tile(labels, (labels.shape[0], X_train.shape[1]))#.transpose()
-    #enc_temp = np.ones((X_train.shape[1],np.unique(X_train).shape[1])) * [np.unique(X_train) for i in range(X_train.shape[1])]
-    #enc_temp = np.ones((X_train.shape[1],256)) * [np.arange(0,256,1) for i in range(X_train.shape[1])]
-    #enc_temp = np.transpose(enc_temp)
     enc = OneHotEncoder(dtype=np.int8)
     enc.fit(enc_temp)
-    enc.n_values_
-    enc.feature_indices_
+    #enc.n_values_
+    #enc.feature_indices_
     X_train_enc = enc.transform(X_train).toarray()
-    #X_test_enc = enc.transform(X_test).toarray()
-
-    #pipe = Pipeline([('scl', StandardScaler()),
-    #                 ('clf', MLPClassifier(verbose=True))])
     
-    clf = LogisticRegression(verbose=True)
+    # have to split up the training because of memory limitations
+    clf = LogisticRegression(verbose=True, warm_start=True, n_jobs=-1)
+    index = np.arange(1, X_train_enc.shape[0], 1)
+    splits = np.array_split(index, 10)
+    for i in range(len(splits)):
+        clf.fit(X_train_enc[splits[i]], y_train[splits[i]])        
     
-    print(cross_val_score(clf, X_train_enc, y_train, n_jobs=-1))
+    # free memory
+    X_train_enc = None
+    
+    X_test_enc = enc.transform(X_train).toarray()
+    print("scoring: ")
+    score = pipe.score(X_test_enc, y_test)
+    print(score)
+    
+    #print(cross_val_score(clf, X_train_enc, y_train, n_jobs=-1))
     
     #kfold = StratifiedKFold(n_splits=3, shuffle=True).split(X_train_enc, y_train)
     #cv_scores = []
