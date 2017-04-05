@@ -48,7 +48,7 @@ def main():
     
     Cs = [1, 50, 100]
     #solvers = ['newton-cg', 'lbfgs', 'liblinear', 'sag']
-    solvers = ['sag']
+    solvers = ['liblinear']
     all_scores = []
     for solver in solvers:
         for C in Cs:
