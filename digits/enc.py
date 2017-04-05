@@ -55,7 +55,7 @@ def main():
     # free memory
     X_train_enc = None
     
-    X_test_enc = enc.transform(X_train).toarray()
+    X_test_enc = enc.transform(X_test).toarray()
     print("scoring: ")
     score = clf.score(X_test_enc, y_test)
     print(score)
