@@ -57,7 +57,7 @@ def main():
     
     X_test_enc = enc.transform(X_train).toarray()
     print("scoring: ")
-    score = pipe.score(X_test_enc, y_test)
+    score = clf.score(X_test_enc, y_test)
     print(score)
     
     #print(cross_val_score(clf, X_train_enc, y_train, n_jobs=-1))
