@@ -17,6 +17,20 @@ import itertools
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.model_selection import cross_val_score
    
+   
+def test_enc():
+    X_train = np.ones((3,2)) * [[  0,   2], [  1,   3], [  2,   4]]
+    
+    labels = np.arange(0,5,1)
+    enc_temp = labels.repeat(X_train.shape[1]).reshape((labels.shape[0], X_train.shape[1]))
+    enc = OneHotEncoder(dtype=np.int8)
+    enc.fit(enc_temp)
+    #enc.n_values_
+    #enc.feature_indices_
+    X_train_enc = enc.transform(X_train).toarray().transpose()
+    
+    
+    
 def main():
     
     train = pd.read_csv("train.csv")
@@ -45,10 +59,12 @@ def main():
     #enc.feature_indices_
     X_train_enc = enc.transform(X_train).toarray()
     
+    # question-can i eliminate any rows where the sum is 0? i wonder
+    #X_train_enc.sum(0)
     
-    Cs = [1, 50, 100]
-    #solvers = ['newton-cg', 'lbfgs', 'liblinear', 'sag']
-    solvers = ['liblinear']
+    Cs = [100, 75, 50, 25, 1]
+    solvers = ['newton-cg', 'lbfgs', 'sag']
+    #solvers = ['liblinear']
     all_scores = []
     for solver in solvers:
         for C in Cs:
@@ -68,11 +84,10 @@ def main():
             print(score)
             
             all_scores.append((C, solver, score))
+            
+            with open(r'test.txt', 'w') as f:
+                f.write(" ".join(map(str, all_scores)))
     
-    
-    with open(r'test.txt', 'w') as f:
-        f.write(" ".join(map(str, all_scores)))
-        
     #print(cross_val_score(clf, X_train_enc, y_train, n_jobs=-1))
     
     #kfold = StratifiedKFold(n_splits=3, shuffle=True).split(X_train_enc, y_train)
@@ -89,4 +104,5 @@ def main():
     print('done')
     
 if __name__ == '__main__':
-    main()
+    test_enc()
+    #main()
