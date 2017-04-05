@@ -47,13 +47,13 @@ def main():
     
     
     Cs = [1, 50, 100]
-    solvers = ['newton-cg', 'lbfgs', 'liblinear', 'sag']
-    
+    #solvers = ['newton-cg', 'lbfgs', 'liblinear', 'sag']
+    solvers = ['sag']
     all_scores = []
     for solver in solvers:
         for C in Cs:
             # have to split up the training because of memory limitations
-            clf = LogisticRegression(verbose=True, C=C, solver=solver, warm_start=True, n_jobs=4)
+            clf = LogisticRegression(verbose=True, C=C, solver=solver, warm_start=True, n_jobs=-1)
             index = np.arange(1, X_train_enc.shape[0], 1)
             splits = np.array_split(index, 10)
             for i in range(len(splits)):
