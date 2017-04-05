@@ -52,10 +52,12 @@ def main():
     X_train_enc = enc.transform(X_train).toarray()
     #X_test_enc = enc.transform(X_test).toarray()
 
-    pipe = Pipeline([('scl', StandardScaler()),
-                     ('clf', MLPClassifier(verbose=True))])
+    #pipe = Pipeline([('scl', StandardScaler()),
+    #                 ('clf', MLPClassifier(verbose=True))])
     
-    print(cross_val_score(pipe, X_train_enc, y_train, cv=10, n_jobs=-1))
+    clf = LogisticRegression(verbose=True)
+    
+    print(cross_val_score(clf, X_train_enc, y_train, n_jobs=-1))
     
     #kfold = StratifiedKFold(n_splits=3, shuffle=True).split(X_train_enc, y_train)
     #cv_scores = []

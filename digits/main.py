@@ -292,12 +292,12 @@ def nn():
     train_scores, test_scores = validation_curve(pipe, X_train, y_train, "clf__learning_rate_init", lri, verbose=True, n_jobs=-1)
     
     train_sizes = np.arange(0.0001, 0.1, 0.005)
-    title = "Validation Curve: Alpha"
+    title = "Validation Curve: Learning Rate Init"
     plt.figure()
     plt.title(title)
     #if ylim is not None:
     #    plt.ylim(*ylim)
-    plt.xlabel("Training examples")
+    plt.xlabel("Learning Rate Init")
     plt.ylabel("Score")
 
     train_scores_mean = np.mean(train_scores, axis=1)
@@ -318,7 +318,7 @@ def nn():
     
     plt.legend(loc="best")
     plt.show()    
-    plt.savefig("vc1.png")
+    plt.savefig("vc_alpha.png")
     
     # validate against test
     '''
