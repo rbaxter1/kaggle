@@ -45,21 +45,34 @@ def main():
     #enc.feature_indices_
     X_train_enc = enc.transform(X_train).toarray()
     
-    # have to split up the training because of memory limitations
-    clf = LogisticRegression(verbose=True, warm_start=True, n_jobs=-1)
-    index = np.arange(1, X_train_enc.shape[0], 1)
-    splits = np.array_split(index, 10)
-    for i in range(len(splits)):
-        clf.fit(X_train_enc[splits[i]], y_train[splits[i]])        
     
-    # free memory
-    X_train_enc = None
+    Cs = [1, 50, 100]
+    solvers = ['newton-cg', 'lbfgs', 'liblinear', 'sag']
     
-    X_test_enc = enc.transform(X_test).toarray()
-    print("scoring: ")
-    score = clf.score(X_test_enc, y_test)
-    print(score)
+    all_scores = []
+    for sovler in solvers:
+        for C in Cs:
+            # have to split up the training because of memory limitations
+            clf = LogisticRegression(verbose=True, C=C, solver=solver, warm_start=True, n_jobs=-1)
+            index = np.arange(1, X_train_enc.shape[0], 1)
+            splits = np.array_split(index, 10)
+            for i in range(len(splits)):
+                clf.fit(X_train_enc[splits[i]], y_train[splits[i]])        
+            
+            # free memory
+            X_train_enc = None
+            
+            X_test_enc = enc.transform(X_test).toarray()
+            print("scoring: ")
+            score = clf.score(X_test_enc, y_test)
+            print(score)
+            
+            all_scores.append((C, solver, score))
     
+    
+    with open(r'test.txt', 'w') as f:
+        f.write(" ".join(map(str, all_scores)))
+        
     #print(cross_val_score(clf, X_train_enc, y_train, n_jobs=-1))
     
     #kfold = StratifiedKFold(n_splits=3, shuffle=True).split(X_train_enc, y_train)
