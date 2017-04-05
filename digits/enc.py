@@ -15,6 +15,7 @@ from sklearn.model_selection import train_test_split, learning_curve
 from sklearn.svm import SVC
 import itertools
 from sklearn.preprocessing import OneHotEncoder
+from sklearn.model_selection import cross_val_score
    
 def main():
     
@@ -23,7 +24,7 @@ def main():
     X = train.values[:,1:]
     
     # split the training data
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.333)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.5)
     
     #X_train = X_train[:,200:202]
     #X_test = X_test[:,200:202]
@@ -54,16 +55,18 @@ def main():
     pipe = Pipeline([('scl', StandardScaler()),
                      ('clf', MLPClassifier(verbose=True))])
     
-    kfold = StratifiedKFold(n_splits=3, shuffle=True).split(X_train_enc, y_train)
-    cv_scores = []
-    test_scores = []
-    for k, (train, test) in enumerate(kfold):
-        pipe.fit(X_train_enc[train], y_train[train])
-        cv_score = pipe.score(X_train_enc[test], y_train[test])
-        cv_scores.append(cv_score)
-        test_score = pipe.score(X_test_enc, y_test)
-        test_scores.append(test_score)
-        print('Fold: %s, Class dist.: %s, CV acc: %.3f, Tets acc: %.3f' % (k+1, np.bincount(y_train[train]), cv_score, test_score))
+    print(cross_val_score(pipe, X_train_enc, y_train, n_jobs=-1))
+    
+    #kfold = StratifiedKFold(n_splits=3, shuffle=True).split(X_train_enc, y_train)
+    #cv_scores = []
+    #test_scores = []
+    #for k, (train, test) in enumerate(kfold):
+    #    pipe.fit(X_train_enc[train], y_train[train])
+    #    cv_score = pipe.score(X_train_enc[test], y_train[test])
+    #    cv_scores.append(cv_score)
+    #    test_score = pipe.score(X_test_enc, y_test)
+    #    test_scores.append(test_score)
+    #    print('Fold: %s, Class dist.: %s, CV acc: %.3f, Tets acc: %.3f' % (k+1, np.bincount(y_train[train]), cv_score, test_score))
         
     print('done')
     
