@@ -234,37 +234,32 @@ def nn():
     Parameters: {'hidden_layer_sizes': (300, 300)}
     '''
     
-    enc = OneHotEncoder()
-    enc.fit(X_train)
-    enc.n_values_
-    enc.feature_indices_
-    
-    enc.transform(X_train).toarray()
+    #enc = OneHotEncoder()
+    #enc.fit(X_train)
+    #enc.n_values_
+    #enc.feature_indices_
+    #enc.transform(X_train).toarray()
 
-    kfold = StratifiedKFold(n_splits=10, shuffle=True).split(X_train, y_train)
-    scores = []
-    for k, (train, test) in enumerate(kfold):
-        pipe.fit(X_train[train], y_train[train])
-        score = pipe.score(X_train[test], y_train[test])
-        scores.append(score)
-        print('Fold: %s, Class dist.: %s, Acc: %.3f' % (k+1, np.bincount(y_train[train]), score))
+    #kfold = StratifiedKFold(n_splits=10, shuffle=True).split(X_train, y_train)
+    #scores = []
+    #for k, (train, test) in enumerate(kfold):
+    #    pipe.fit(X_train[train], y_train[train])
+    #    score = pipe.score(X_train[test], y_train[test])
+    #    scores.append(score)
+    #    print('Fold: %s, Class dist.: %s, Acc: %.3f' % (k+1, np.bincount(y_train[train]), score))
     
-    pipe = Pipeline([('scl', StandardScaler()),
-                     ('clf', MLPClassifier(verbose=True, tol=1e-8, max_iter=63))])
-    pipe.fit(X_train, y_train)
+    #pipe = Pipeline([('scl', StandardScaler()),
+    #                 ('clf', MLPClassifier(verbose=True, tol=1e-8, max_iter=63))])
+    #pipe.fit(X_train, y_train)
     
-    
-    pred = pipe.predict(X_test)
-    score = pipe.score(X_test, y_test)
-    
-    
+    #pred = pipe.predict(X_test)
+    #score = pipe.score(X_test, y_test)
     
     #hl = [(800,i) for i in np.arange(100, 900, 100)]
     hl = [(i,) for i in np.arange(100, 2000, 100)]
     train_scores, test_scores = validation_curve(pipe, X_train, y_train, "clf__hidden_layer_sizes", hl, verbose=True, n_jobs=-1)
-    
     train_sizes = np.arange(100, 2000, 100)
-    title = "Validation Curve"
+    title = "Validation Curve: Hidden Layers"
     plt.figure()
     plt.title(title)
     #if ylim is not None:
@@ -290,7 +285,40 @@ def nn():
     
     plt.legend(loc="best")
     plt.show()    
-    plt.savefig("vc.png")
+    plt.savefig("vc1.png")
+    
+    
+    lri = [np.arange(0.0001, 0.1, 0.005)]
+    train_scores, test_scores = validation_curve(pipe, X_train, y_train, "clf__learning_rate_init", lri, verbose=True, n_jobs=-1)
+    
+    train_sizes = np.arange(0.0001, 0.1, 0.005)
+    title = "Validation Curve: Alpha"
+    plt.figure()
+    plt.title(title)
+    #if ylim is not None:
+    #    plt.ylim(*ylim)
+    plt.xlabel("Training examples")
+    plt.ylabel("Score")
+
+    train_scores_mean = np.mean(train_scores, axis=1)
+    train_scores_std = np.std(train_scores, axis=1)
+    test_scores_mean = np.mean(test_scores, axis=1)
+    test_scores_std = np.std(test_scores, axis=1)
+    plt.grid()
+        
+    plt.fill_between(train_sizes, train_scores_mean - train_scores_std,
+                     train_scores_mean + train_scores_std, alpha=0.1,
+                     color="r")
+    plt.fill_between(train_sizes, test_scores_mean - test_scores_std,
+                     test_scores_mean + test_scores_std, alpha=0.1, color="g")
+    plt.plot(train_sizes, train_scores_mean, 'o-', color="r",
+             label="Training score")
+    plt.plot(train_sizes, test_scores_mean, 'o-', color="g",
+             label="Cross-validation score")
+    
+    plt.legend(loc="best")
+    plt.show()    
+    plt.savefig("vc1.png")
     
     # validate against test
     '''
