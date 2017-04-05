@@ -50,7 +50,7 @@ def main():
     solvers = ['newton-cg', 'lbfgs', 'liblinear', 'sag']
     
     all_scores = []
-    for sovler in solvers:
+    for solver in solvers:
         for C in Cs:
             # have to split up the training because of memory limitations
             clf = LogisticRegression(verbose=True, C=C, solver=solver, warm_start=True, n_jobs=-1)
