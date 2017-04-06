@@ -373,79 +373,48 @@ def nn():
 
     
 def nn2():
-    
     train = pd.read_csv("train.csv")
-    y_train = train.values[:,0]
-    X_train = train.values[:,1:]
+    y = train.values[:,0]
+    X = train.values[:,1:]
+    
+    # split the training data
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.333)
+    
     
     sc = StandardScaler()
     sc.fit(X_train)
     X_train_std = sc.transform(X_train)
     
+    sc.fit(X_test)
+    X_test_std = sc.transform(X_test)
     
-    
-    #pipe = Pipeline([('scl', StandardScaler()),
-    #                 ('clf', MLPClassifier(hidden_layer_sizes=(300,300,300)))])
-    
-    #clf = MLPClassifier(tol=1e-6, verbose=True, warm_start=True, early_stopping=True, validation_fraction=0.1, hidden_layer_sizes=(300,300,300))
     clf = MLPClassifier(hidden_layer_sizes=(300,300,300), warm_start=True, verbose=True)
     
-    '''
-    param_grid = {"hidden_layer_sizes": [(100,),
-                                         (100,100),
-                                         (100,100,100),
-                                         (200,),
-                                         (200,200),
-                                         (200,200,200),
-                                         (300,),
-                                         (300,300),
-                                         (300,300,300),
-                                         (400,),
-                                         (400,400),
-                                         (400,400,400)]}
-
-    
-    grid_search = GridSearchCV(clf, param_grid=param_grid, n_jobs=-1)
-    start = time()
-    grid_search.fit(X_train_std, y_train)    
-
-    print("GridSearchCV took %.2f seconds for %d candidate parameter settings."
-          % (time() - start, len(grid_search.cv_results_['params'])))
-    report(grid_search.cv_results_)
-    
-    
-    Model with rank: 1
-    Mean validation score: 0.966 (std: 0.000)
-    Parameters: {'hidden_layer_sizes': (200, 200)}
-    
-    Model with rank: 2
-    Mean validation score: 0.966 (std: 0.001)
-    Parameters: {'hidden_layer_sizes': (400, 400)}
-    
-    Model with rank: 3
-    Mean validation score: 0.966 (std: 0.001)
-    Parameters: {'hidden_layer_sizes': (300, 300)}
-    '''
     kfold = StratifiedKFold(n_splits=10, shuffle=True).split(X_train_std, y_train)
     
+    test_scores = []
     scores = []
     for k, (train, test) in enumerate(kfold):
         clf.fit(X_train_std[train], y_train[train])
         score = clf.score(X_train_std[test], y_train[test])
         scores.append(score)
-        print('Fold: %s, Class dist.: %s, Acc: %.3f' % (k+1, np.bincount(y_train[train]), score))
+        
+        test_score = clf.score(X_test_std, y_test)
+        test_scores.append(test_score)
+        
+        print('Fold: %s, Class dist.: %s, Acc: %.3f, Test: %.3f' % (k+1, np.bincount(y_train[train]), score, test_score))
         
     #clf.fit(X_train_std, y_train)
-    test = pd.read_csv("test.csv")
-    X_test = test.values    
-    X_test_std = sc.transform(X_test)
+    #test = pd.read_csv("test.csv")
+    #X_test = test.values    
+    #X_test_std = sc.transform(X_test)
     
-    pred = clf.predict(X_test_std)
+    #pred = clf.predict(X_test_std)
     
-    kaggle = np.column_stack((np.arange(1, pred.shape[0]+1, 1), pred))
-    df = pd.DataFrame(kaggle)
-    df.columns = ['ImageId','Label']
-    df.to_csv("digits.csv", index=False)
+    #kaggle = np.column_stack((np.arange(1, pred.shape[0]+1, 1), pred))
+    #df = pd.DataFrame(kaggle)
+    #df.columns = ['ImageId','Label']
+    #df.to_csv("digits.csv", index=False)
 
     #ImageId,Label
     print('done')
@@ -495,5 +464,61 @@ def main():
     
 
 
+def nn3():
+    train = pd.read_csv("train.csv")
+    y = train.values[:,0]
+    X = train.values[:,1:]
+    
+    # split the training data
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.333)
+    
+    sc = StandardScaler()
+    sc.fit(X_train)
+    X_train_std = sc.transform(X_train)
+    
+    sc.fit(X_test)
+    X_test_std = sc.transform(X_test)
+    
+    clf = MLPClassifier(hidden_layer_sizes=(100,), max_iter=1, warm_start=True, verbose=True)
+        
+    test_scores = []
+    train_scores = []
+    clf.fit(X_train_std, y_train)
+    
+    x_axis = range(1000)
+    for k in x_axis:
+        clf.fit(X_train_std, y_train)
+        train_score = clf.score(X_train_std, y_train)
+        train_scores.append(train_score)
+        test_score = clf.score(X_test_std, y_test)
+        test_scores.append(test_score)
+        print('Iteration: %s, Train: %.3f, Test: %.3f' % (k+1, train_score, test_score))
+                
+    title = "Learning Curve"
+    plt.figure()
+    plt.title(title)
+    plt.xlabel("Training examples")
+    plt.ylabel("Score")
+    
+    plt.grid()
+    
+    plt.plot(x_axis, train_scores, color="r",
+             label="Training score")
+    plt.plot(x_axis, test_scores, color="g",
+             label="Testing score")
+    
+    plt.legend(loc="best")
+    plt.show()
+                
+    print('done')
+
+def bug():
+    X = np.random.rand(100,10)
+    y = np.random.random_integers(0, 1, (100,))
+    
+    clf = MLPClassifier(max_iter=1, warm_start=True, verbose=True)
+    for k in range(3):
+        clf.fit(X, y)
+
 if __name__ == '__main__':
-    nn()
+    nn3()
