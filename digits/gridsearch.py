@@ -5,6 +5,7 @@ from sklearn.metrics import classification_report
 from sklearn.svm import SVC
 import pandas as pd
 import numpy as np
+from sklearn.preprocessing import OneHotEncoder
 
 
 train = pd.read_csv("train.csv")
