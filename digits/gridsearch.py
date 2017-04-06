@@ -3,6 +3,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.model_selection import GridSearchCV
 from sklearn.metrics import classification_report
 from sklearn.svm import SVC
+import pandas as pd
 
 train = pd.read_csv("train.csv")
 y = train.values[:,0]
