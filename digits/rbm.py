@@ -7,7 +7,7 @@ from sklearn.model_selection import GridSearchCV
 from sklearn.pipeline import Pipeline
 from sklearn.linear_model import LogisticRegression, SGDClassifier
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler, Binarizer
+from sklearn.preprocessing import StandardScaler, Binarizer, OneHotEncoder
 
 # Utility function to report best scores
 def report(results, n_top=3):
@@ -74,6 +74,8 @@ def testRBM():
         
         train_score = clf.score(X_train_transform, y_train)
         train_scores.append(train_score)
+        
+        print(threshold)
         print(train_score)
         
         X_test_bin = Binarizer(threshold=threshold).fit_transform(X_test)
@@ -103,5 +105,39 @@ def testRBM():
                 
     print('done')
     
+    
+def testRBM2():
+    train = pd.read_csv("train.csv")
+    y = train.values[:,0]
+    X = train.values[:,1:]
+    
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25)
+    
+    # there are 784 dimensions (1 for each pixel)
+    # each d has labels 0 to 255
+    # one hot encode for each label
+    labels = np.arange(0,256,1)
+    enc_temp = labels.repeat(X_train.shape[1]).reshape((labels.shape[0], X_train.shape[1]))
+    enc = OneHotEncoder(dtype=np.int8)
+    enc.fit(enc_temp)
+    #enc.n_values_
+    #enc.feature_indices_
+    X_train_ohe = enc.transform(X_train).toarray()
+    
+    rbm = BernoulliRBM(verbose=True)
+    rbm.fit(X_train_ohe, y_train)
+    X_train_rbm = rbm.transform(X_train_ohe)
+    
+    clf = LogisticRegression(verbose=True)
+    clf.fit(X_train_rbm y_train)
+    train_score = clf.score(X_train_rbm, y_train)
+    print(train_score)
+        
+    X_test_rbm = rbm.transform(X_test_enc)
+    test_score = clf.score(X_test_rbm, y_test)
+    print(test_score)
+    
+    print('done')
+    
 if __name__ == '__main__':
-    testRBM()
+    testRBM2()
