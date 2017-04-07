@@ -30,7 +30,7 @@ def rbm():
     param_grid = {"rbm__n_components": np.arange(1,500,25),
                   "rbm__learning_rate": np.arange(0.01,0.1,0.01),
                   "lr__C": np.arange(1,1000,100)}
-    gs = GridSearchCV(clf, param_grid=param_grid,n_jobs=-1)
+    gs = GridSearchCV(clf, param_grid=param_grid,n_jobs=5)
     st = time()
     gs.fit(X, y)
 
