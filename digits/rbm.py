@@ -111,7 +111,7 @@ def testRBM2():
     y = train.values[:,0]
     X = train.values[:,1:]
     
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.90)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3333)
     
     # there are 784 dimensions (1 for each pixel)
     # each d has labels 0 to 255
@@ -125,10 +125,14 @@ def testRBM2():
     X_train_ohe = enc.transform(X_train).toarray()
     
     rbm = BernoulliRBM(verbose=True)
+    print('fitting RBM...')
     rbm.fit(X_train_ohe, y_train)
+    print('transforming RBM...')
     X_train_rbm = rbm.transform(X_train_ohe)
     
+    
     clf = LogisticRegression(verbose=True)
+    print('fitting logistic...')
     clf.fit(X_train_rbm, y_train)
     train_score = clf.score(X_train_rbm, y_train)
     print(train_score)
