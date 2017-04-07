@@ -5,7 +5,7 @@ from time import time
 from sklearn.neural_network import BernoulliRBM, MLPClassifier
 from sklearn.model_selection import GridSearchCV
 from sklearn.pipeline import Pipeline
-from sklearn.linear_model import LogisticRegression 
+from sklearn.linear_model import LogisticRegression, SGDClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 
@@ -55,9 +55,10 @@ def testRBM():
     rbm = BernoulliRBM(n_components=1)
     rbm.fit(X_train_std, y_train)
     
-    clf = MLPClassifier(verbose=True)
-    clf.coefs_ = rbm.components_[0,:]
-    clf.fit(X_train_std, y_train)
+    #clf = MLPClassifier(verbose=True)
+    clf = SGDClassifier(loss='log', verbose=True)
+    #clf.coefs_ = rbm.components_[0,:]
+    clf.fit(X_train_std, y_train, coef_init=rbm.components_[0,:])
     score = clf.score(X_test_std, y_test)
     print(score)
 
