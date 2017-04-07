@@ -494,6 +494,8 @@ def nn3():
         test_scores.append(test_score)
         print('Iteration: %s, Train: %.3f, Test: %.3f' % (k+1, train_score, test_score))
                 
+                
+    filename = 'vc.png'
     title = "Learning Curve"
     plt.figure()
     plt.title(title)
@@ -508,7 +510,7 @@ def nn3():
              label="Testing score")
     
     plt.legend(loc="best")
-    plt.show()
+    plt.savefig(filename)
                 
     print('done')
 
