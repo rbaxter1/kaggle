@@ -7,7 +7,7 @@ from sklearn.model_selection import GridSearchCV
 from sklearn.pipeline import Pipeline
 from sklearn.linear_model import LogisticRegression, SGDClassifier
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import StandardScaler, Binarizer
 
 # Utility function to report best scores
 def report(results, n_top=3):
@@ -46,22 +46,25 @@ def testRBM():
     
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25)
     
-    sc = StandardScaler()
-    sc.fit(X_train)
-    X_train_std = sc.transform(X_train)
-    X_test_std = sc.transform(X_test)
+    #sc = StandardScaler()
+    #sc.fit(X_train)
+    #X_train_std = sc.transform(X_train)
+    #X_test_std = sc.transform(X_test)
     
-    X_train_std = X_train
-    X_test_std = X_test
+    #X_train_std = X_train
+    #X_test_std = X_test
     
     train_scores = []
     test_scores = []
     #rbm = BernoulliRBM(n_components=X_train.shape[1])
     #for n_components in np.arange(1, X_train_std.shape[1]):
-    for n_components in [100, 200, 300, 400, 500, 600, 700, X_train_std.shape[1]]:
-        rbm = BernoulliRBM(n_components=n_components, verbose=True)
-        rbm.fit(X_train_std, y_train)
-        X_train_transform = rbm.transform(X_train_std)
+    for threshold in np.arange(0, 300, 50):
+        #rbm = BernoulliRBM(n_components=n_components, verbose=True
+        X_train_bin = Binarizer(threshold=threshold).fit_transform(X_train)
+        rbm = BernoulliRBM(verbose=True)
+        rbm.fit(X_train_bin, y_train)
+        
+        X_train_transform = rbm.transform(X_train_bin)
         
         #clf = MLPClassifier(verbose=True)
         #clf = SGDClassifier(loss='log', verbose=True)
@@ -73,15 +76,16 @@ def testRBM():
         train_scores.append(train_score)
         print(train_score)
         
-        X_test_transform = rbm.transform(X_test_std)
+        X_test_bin = Binarizer(threshold=threshold).fit_transform(X_test)
+        X_test_transform = rbm.transform(X_test_bin)
         test_score = clf.score(X_test_transform, y_test)
         test_scores.append(test_score)
         print(test_score)
         
 
     
-    filename = 'vc_rbm_ncomp.png'
-    title = "Learning Curve: RBM n_components"
+    filename = 'vc_rbm_thresh.png'
+    title = "Learning Curve: RBM threshold"
     plt.figure()
     plt.title(title)
     plt.xlabel("Training examples")
