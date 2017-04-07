@@ -27,7 +27,7 @@ def rbm():
     # n_components=256, learning_rate=0.1, batch_size=10, n_iter=10    
     clf = Pipeline([('rbm', BernoulliRBM()), ('lr', LogisticRegression())])
 
-    param_grid = {"rbm__n_components": np.arange(1,4,1)}
+    param_grid = {"rbm__n_components": np.arange(1,125,25)}
     gs = GridSearchCV(clf, param_grid=param_grid)
     st = time()
     gs.fit(X, y)
