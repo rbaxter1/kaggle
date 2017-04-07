@@ -7,6 +7,7 @@ from sklearn.model_selection import GridSearchCV
 from sklearn.pipeline import Pipeline
 from sklearn.linear_model import LogisticRegression 
 from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
 
 # Utility function to report best scores
 def report(results, n_top=3):
@@ -45,14 +46,19 @@ def testRBM():
     
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.333)
     
+    sc = StandardScaler()
+    sc.fit(X_train)
+    X_train_std = sc.transform(X_train)
+    X_test_std = sc.transform(X_test)
+    
     #rbm = BernoulliRBM(n_components=X_train.shape[1])
     rbm = BernoulliRBM(n_components=1)
-    rbm.fit(X_train, y_train)
+    rbm.fit(X_train_std, y_train)
     
     clf = MLPClassifier(verbose=True)
     clf.coefs_ = rbm.components_[0,:]
-    clf.fit(X_train, y_train)
-    score = clf.score(X_test, y_test)
+    clf.fit(X_train_std, y_train)
+    score = clf.score(X_test_std, y_test)
     print(score)
 
     
