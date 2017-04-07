@@ -129,7 +129,7 @@ def testRBM2():
     X_train_rbm = rbm.transform(X_train_ohe)
     
     clf = LogisticRegression(verbose=True)
-    clf.fit(X_train_rbm y_train)
+    clf.fit(X_train_rbm, y_train)
     train_score = clf.score(X_train_rbm, y_train)
     print(train_score)
         
