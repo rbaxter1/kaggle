@@ -33,7 +33,7 @@ def rbm():
     gs.fit(X, y)
 
     print("GridSearchCV took %.2f seconds for %d candidate parameter settings." % (time() - st, len(gs.cv_results_['params'])))
-    report(grid_search.cv_results_)
+    report(gs.cv_results_)
     
 if __name__ == '__main__':
     rbm()
