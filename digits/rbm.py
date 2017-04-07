@@ -51,6 +51,9 @@ def testRBM():
     X_train_std = sc.transform(X_train)
     X_test_std = sc.transform(X_test)
     
+    X_train_std = X_train
+    X_test_std = X_test
+    
     train_scores = []
     test_scores = []
     #rbm = BernoulliRBM(n_components=X_train.shape[1])
