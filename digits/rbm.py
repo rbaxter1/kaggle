@@ -55,7 +55,7 @@ def testRBM():
     test_scores = []
     #rbm = BernoulliRBM(n_components=X_train.shape[1])
     for n_components in np.arange(1, X_train_std.shape[1]):
-        rbm = BernoulliRBM(n_components=1, verbose=True)
+        rbm = BernoulliRBM(n_components=n_components, verbose=True)
         rbm.fit(X_train_std, y_train)
         X_train_transform = rbm.transform(X_train_std)
         
