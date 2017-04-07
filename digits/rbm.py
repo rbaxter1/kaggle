@@ -52,7 +52,7 @@ def testRBM():
     X_test_std = sc.transform(X_test)
     
     #rbm = BernoulliRBM(n_components=X_train.shape[1])
-    rbm = BernoulliRBM(n_components=1)
+    rbm = BernoulliRBM(n_components=1, verbose=True)
     rbm.fit(X_train_std, y_train)
     
     #clf = MLPClassifier(verbose=True)
