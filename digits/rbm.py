@@ -51,22 +51,49 @@ def testRBM():
     X_train_std = sc.transform(X_train)
     X_test_std = sc.transform(X_test)
     
+    train_scores = []
+    test_scores = []
     #rbm = BernoulliRBM(n_components=X_train.shape[1])
-    rbm = BernoulliRBM(n_components=1, verbose=True)
-    rbm.fit(X_train_std, y_train)
-    X_train_transform = rbm.transform(X_train_std)
-    
-    #clf = MLPClassifier(verbose=True)
-    #clf = SGDClassifier(loss='log', verbose=True)
-    clf = LogisticRegression(verbose=True)
-    #clf.coef_ = rbm.components_[0,:]
-    clf.fit(X_train_transform, y_train)
-    
-    
-    X_test_transform = rbm.transform(X_test_std)
-    score = clf.score(X_test_transform, y_test)
-    print(score)
+    for n_components in np.arange(1, X_train_std.shpae[1]):
+        rbm = BernoulliRBM(n_components=1, verbose=True)
+        rbm.fit(X_train_std, y_train)
+        X_train_transform = rbm.transform(X_train_std)
+        
+        #clf = MLPClassifier(verbose=True)
+        #clf = SGDClassifier(loss='log', verbose=True)
+        clf = LogisticRegression(verbose=True)
+        #clf.coef_ = rbm.components_[0,:]
+        clf.fit(X_train_transform, y_train)
+        
+        train_score = clf.score(X_train_transform, y_train)
+        train_scores.append(train_score)
+        print(train_score)
+        
+        X_test_transform = rbm.transform(X_test_std)
+        test_score = clf.score(X_test_transform, y_test)
+        test_scores.append(test_score)
+        print(test_score)
+        
 
+    
+    filename = 'vc_rbm_ncomp.png'
+    title = "Learning Curve: RBM n_components"
+    plt.figure()
+    plt.title(title)
+    plt.xlabel("Training examples")
+    plt.ylabel("Score")
+    
+    plt.grid()
+    
+    plt.plot(x_axis, train_scores, color="r",
+             label="Training score")
+    plt.plot(x_axis, test_scores, color="g",
+             label="Testing score")
+    
+    plt.legend(loc="best")
+    plt.savefig(filename)
+                
+    print('done')
     
 if __name__ == '__main__':
     testRBM()
