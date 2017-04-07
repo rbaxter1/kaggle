@@ -44,7 +44,7 @@ def testRBM():
     y = train.values[:,0]
     X = train.values[:,1:]
     
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.333)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25)
     
     sc = StandardScaler()
     sc.fit(X_train)
@@ -54,12 +54,17 @@ def testRBM():
     #rbm = BernoulliRBM(n_components=X_train.shape[1])
     rbm = BernoulliRBM(n_components=1, verbose=True)
     rbm.fit(X_train_std, y_train)
+    X_train_transform = rbm.transform(X_train_std)
     
     #clf = MLPClassifier(verbose=True)
-    clf = SGDClassifier(loss='log', verbose=True)
-    #clf.coefs_ = rbm.components_[0,:]
-    clf.fit(X_train_std, y_train, coef_init=rbm.components_[0,:])
-    score = clf.score(X_test_std, y_test)
+    #clf = SGDClassifier(loss='log', verbose=True)
+    clf = LogisticRegression(verbose=True)
+    #clf.coef_ = rbm.components_[0,:]
+    clf.fit(X_train_transform, y_train)
+    
+    
+    X_test_transform = rbm.transform(X_test_std)
+    score = clf.score(X_test_transform, y_test)
     print(score)
 
     
