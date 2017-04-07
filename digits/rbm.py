@@ -2,10 +2,11 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from time import time
-from sklearn.neural_network import BernoulliRBM
+from sklearn.neural_network import BernoulliRBM, MLPClassifier
 from sklearn.model_selection import GridSearchCV
 from sklearn.pipeline import Pipeline
 from sklearn.linear_model import LogisticRegression 
+from sklearn.model_selection import train_test_split
 
 # Utility function to report best scores
 def report(results, n_top=3):
@@ -37,5 +38,23 @@ def rbm():
     print("GridSearchCV took %.2f seconds for %d candidate parameter settings." % (time() - st, len(gs.cv_results_['params'])))
     report(gs.cv_results_)
     
+def testRBM():
+    train = pd.read_csv("train.csv")
+    y = train.values[:,0]
+    X = train.values[:,1:]
+    
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.333)
+    
+    #rbm = BernoulliRBM(n_components=X_train.shape[1])
+    rbm = BernoulliRBM(n_components=1)
+    rbm.fit(X_train, y_train)
+    
+    clf = MLPClassifier(verbose=True)
+    clf.coefs_ = rbm.components_[0,:]
+    clf.fit(X_train, y_train)
+    score = clf.score(X_test, y_test)
+    print(score)
+
+    
 if __name__ == '__main__':
-    rbm()
+    testRBM()
