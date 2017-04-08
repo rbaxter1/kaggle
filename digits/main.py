@@ -497,7 +497,9 @@ def nn3():
     #X_test_std = sc.transform(X_test)
     #X_test_std = X_test
     
-    for c in np.linspace(.001, 1., 10):
+    c = 0.001
+    
+    for n_components in np.linspace(300, 800, 5):
         rbm = BernoulliRBM(learning_rate=c, verbose=True)
         rbm.fit(X_train_std, y_train)
         X_train_std = rbm.transform(X_train_std)
@@ -522,7 +524,7 @@ def nn3():
                 test_scores.append(test_score)
                 print('Iteration: %s, Train: %.3f, Test: %.3f' % (k+1, train_score, test_score))
     
-            title = "Learning Curve:\n thresh=" + str(threshold) + " c=" + str(c)
+            title = "Learning Curve:\n thresh=" + str(threshold) + " c=" + str(c) + " co=" + str(n_components)
             plt.figure()
             plt.title(title)
             plt.xlabel("Iterations")
@@ -536,7 +538,7 @@ def nn3():
                      label="Testing score")
     
             plt.legend(loc="best")
-            plt.savefig("lc_mlp_" + str(activation) + "_" + str(threshold) + "_" + str(c) + ".png")
+            plt.savefig("lc_mlp_" + str(activation) + "_" + str(threshold) + "_" + str(c) + "_" + str(n_components) + ".png")
             #plt.show()
 
     print('done')
