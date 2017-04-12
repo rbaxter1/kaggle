@@ -46,7 +46,7 @@ def plot_series(self, x, y, y_std, y_lab, colors, markers, title, xlab, ylab, fi
 
 
 
-def report(results, n_top=3):
+def report(results, n_top=20):
     for i in range(1, n_top + 1):
         candidates = np.flatnonzero(results['rank_test_score'] == i)
         for candidate in candidates:
@@ -565,10 +565,10 @@ def nn4():
     clf = MLPClassifier(solver='sgd', activation='logistic', learning_rate='invscaling', max_iter=1000, verbose=True,
                         power_t=0.5, momentum=0.9, nesterovs_momentum=True, learning_rate_init=0.001)
 
-    param_grid = {"power_t": [0.5],
-                  "momentum": [0.9],
+    param_grid = {"power_t": np.linspace(0.1, 0.9, 9),
+                  "momentum": np.linspace(0.0, 1.0, 11),
                   "nesterovs_momentum": [True, False],
-                  "learning_rate_init": [0.001]}
+                  "learning_rate_init": [1.0, 0.1, 0.01, 0.001, 0.0001]}
 
     grid_search = GridSearchCV(clf, param_grid=param_grid, n_jobs=-1)
     start = time()
@@ -576,7 +576,7 @@ def nn4():
 
     print("GridSearchCV took %.2f seconds for %d candidate parameter settings."
           % (time() - start, len(grid_search.cv_results_['params'])))
-    report(grid_search.cv_results_, 10)
+    report(grid_search.cv_results_, 20)
     
     print('done')
 
