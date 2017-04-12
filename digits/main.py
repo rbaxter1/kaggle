@@ -545,6 +545,41 @@ def nn3():
 
 
 
+def nn4():
+    train = pd.read_csv("train.csv")
+    y = train.values[:,0]
+    X = train.values[:,1:]
+
+    # split the training data
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.333)
+    
+    sc = StandardScaler()
+    sc.fit(X_train)
+    X_train_std = sc.transform(X_train)
+    X_train_std = X_train
+
+    sc.fit(X_test)
+    X_test_std = sc.transform(X_test)
+    X_test_std = X_test
+        
+    clf = MLPClassifier(solver='sgd', activation='logistic', learning_rate='invscaling', max_iter=1000, verbose=True,
+                        power_t=0.5, momentum=0.9, nesterovs_momentum=True, learning_rate_init=0.001)
+
+    param_grid = {"power_t": [0.5],
+                  "momentum": [0.9],
+                  "nesterovs_momentum": [True, False],
+                  "learning_rate_init": [0.001]}
+
+    grid_search = GridSearchCV(clf, param_grid=param_grid, n_jobs=-1)
+    start = time()
+    grid_search.fit(X_train_std, y_train)    
+
+    print("GridSearchCV took %.2f seconds for %d candidate parameter settings."
+          % (time() - start, len(grid_search.cv_results_['params'])))
+    report(grid_search.cv_results_, 10)
+    
+    print('done')
+
 
 
 def bug():
@@ -556,5 +591,4 @@ def bug():
         clf.fit(X, y)
 
 if __name__ == '__main__':
-    #plothist()
-    nn3()
+    nn4()
