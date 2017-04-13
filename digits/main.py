@@ -570,7 +570,7 @@ def nn4():
                   "nesterovs_momentum": [True, False],
                   "learning_rate_init": [1.0, 0.1, 0.01, 0.001, 0.0001]}
 
-    grid_search = GridSearchCV(clf, param_grid=param_grid, n_jobs=-1)
+    grid_search = GridSearchCV(clf, param_grid=param_grid, verbose=True, n_jobs=1)
     start = time()
     grid_search.fit(X_train_std, y_train)    
 
@@ -579,6 +579,154 @@ def nn4():
     report(grid_search.cv_results_, 20)
     
     print('done')
+    '''
+    GridSearchCV took 31329.38 seconds for 990 candidate parameter settings.
+    Model with rank: 1
+    Mean validation score: 0.946 (std: 0.006)
+    Parameters: {'learning_rate_init': 0.1, 'momentum': 0.20000000000000001, 'nesterovs_momentum': True, 'power_t': 0.10 000000000000001}
+    
+    Model with rank: 2
+    Mean validation score: 0.946 (std: 0.001)
+    Parameters: {'learning_rate_init': 0.1, 'momentum': 0.10000000000000001, 'nesterovs_momentum': True, 'power_t': 0.10 000000000000001}
+    
+    Model with rank: 3
+    Mean validation score: 0.945 (std: 0.005)
+    Parameters: {'learning_rate_init': 0.1, 'momentum': 0.10000000000000001, 'nesterovs_momentum': False, 'power_t': 0.1 0000000000000001}
+    
+    Model with rank: 4
+    Mean validation score: 0.945 (std: 0.003)
+    Parameters: {'learning_rate_init': 0.01, 'momentum': 0.90000000000000002, 'nesterovs_momentum': False, 'power_t': 0. 10000000000000001}
+    
+    Model with rank: 5
+    Mean validation score: 0.944 (std: 0.003)
+    Parameters: {'learning_rate_init': 0.1, 'momentum': 0.0, 'nesterovs_momentum': False, 'power_t': 0.10000000000000001 }
+    
+    Model with rank: 6
+    Mean validation score: 0.944 (std: 0.005)
+    Parameters: {'learning_rate_init': 0.1, 'momentum': 0.0, 'nesterovs_momentum': True, 'power_t': 0.10000000000000001}
+    
+    Model with rank: 7
+    Mean validation score: 0.943 (std: 0.006)
+    Parameters: {'learning_rate_init': 0.1, 'momentum': 0.20000000000000001, 'nesterovs_momentum': False, 'power_t': 0.1 0000000000000001}
+    
+    Model with rank: 8
+    Mean validation score: 0.942 (std: 0.004)
+    Parameters: {'learning_rate_init': 0.01, 'momentum': 0.90000000000000002, 'nesterovs_momentum': True, 'power_t': 0.1 0000000000000001}
+    
+    Model with rank: 9
+    Mean validation score: 0.941 (std: 0.002)
+    Parameters: {'learning_rate_init': 0.1, 'momentum': 0.30000000000000004, 'nesterovs_momentum': False, 'power_t': 0.1 0000000000000001}
+    
+    Model with rank: 10
+    Mean validation score: 0.936 (std: 0.006)
+    Parameters: {'learning_rate_init': 0.1, 'momentum': 0.40000000000000002, 'nesterovs_momentum': True, 'power_t': 0.10 000000000000001}
+    
+    Model with rank: 11
+    Mean validation score: 0.935 (std: 0.002)
+    Parameters: {'learning_rate_init': 0.1, 'momentum': 0.40000000000000002, 'nesterovs_momentum': False, 'power_t': 0.1 0000000000000001}
+    
+    Model with rank: 12
+    Mean validation score: 0.935 (std: 0.002)
+    Parameters: {'learning_rate_init': 0.1, 'momentum': 0.30000000000000004, 'nesterovs_momentum': True, 'power_t': 0.10 000000000000001}
+    
+    Model with rank: 13
+    Mean validation score: 0.934 (std: 0.002)
+    Parameters: {'learning_rate_init': 0.1, 'momentum': 0.70000000000000007, 'nesterovs_momentum': False, 'power_t': 0.2 0000000000000001}
+    
+    Model with rank: 14
+    Mean validation score: 0.934 (std: 0.002)
+    Parameters: {'learning_rate_init': 0.01, 'momentum': 0.80000000000000004, 'nesterovs_momentum': False, 'power_t': 0. 10000000000000001}
+    
+    Model with rank: 15
+    Mean validation score: 0.934 (std: 0.002)
+    Parameters: {'learning_rate_init': 0.1, 'momentum': 0.60000000000000009, 'nesterovs_momentum': False, 'power_t': 0.2 0000000000000001}
+    
+    Model with rank: 16
+    Mean validation score: 0.934 (std: 0.006)
+    Parameters: {'learning_rate_init': 0.1, 'momentum': 0.5, 'nesterovs_momentum': True, 'power_t': 0.10000000000000001}
+    
+    Model with rank: 17
+    Mean validation score: 0.933 (std: 0.002)
+    Parameters: {'learning_rate_init': 0.1, 'momentum': 0.60000000000000009, 'nesterovs_momentum': True, 'power_t': 0.20 000000000000001}
+    
+    Model with rank: 18
+    Mean validation score: 0.933 (std: 0.003)
+    Parameters: {'learning_rate_init': 0.01, 'momentum': 0.80000000000000004, 'nesterovs_momentum': True, 'power_t': 0.1 0000000000000001}
+    
+    Model with rank: 19
+    Mean validation score: 0.930 (std: 0.002)
+    Parameters: {'learning_rate_init': 0.1, 'momentum': 0.5, 'nesterovs_momentum': False, 'power_t': 0.10000000000000001 }
+    
+    Model with rank: 20
+    Mean validation score: 0.930 (std: 0.002)
+    Parameters: {'learning_rate_init': 0.1, 'momentum': 0.70000000000000007, 'nesterovs_momentum': True, 'power_t': 0.20 000000000000001}
+    
+    done
+    '''
+
+def nn5_kaggle():
+    train = pd.read_csv("train.csv")
+    y = train.values[:,0]
+    X = train.values[:,1:]
+
+    # split the training data
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.333)
+    
+    sc = StandardScaler()
+    sc.fit(X_train)
+    X_train_std = sc.transform(X_train)
+    X_train_std = X_train
+
+    sc.fit(X_test)
+    X_test_std = sc.transform(X_test)
+    X_test_std = X_test
+    
+    X_train_std = Binarizer(threshold=225).fit_transform(X_train)
+    X_test_std = Binarizer(threshold=225).fit_transform(X_test)
+    
+    clf = MLPClassifier(solver='sgd', activation='logistic', learning_rate='invscaling', max_iter=1000, verbose=True,
+                        power_t=0.1, momentum=0.1, nesterovs_momentum=True, learning_rate_init=0.1)
+    
+    clf.fit(X_train_std, y_train)
+    
+    print(clf.score(X_test_std, y_test))
+    
+    #pred = clf.predict(X_test_std)
+
+    #kaggle = np.column_stack((np.arange(1, pred.shape[0]+1, 1), pred))
+    #df = pd.DataFrame(kaggle)
+    #df.columns = ['ImageId','Label']
+    #df.to_csv("digits.csv", index=False)
+    
+    train = pd.read_csv("train.csv")
+    y = train.values[:,0]
+    X = train.values[:,1:]
+
+    # split the training data
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.333)
+    
+    sc = StandardScaler()
+    sc.fit(X_train)
+    X_train_std = sc.transform(X_train)
+    X_train_std = X_train
+
+    sc.fit(X_test)
+    X_test_std = sc.transform(X_test)
+    X_test_std = X_test
+        
+    clf = MLPClassifier(solver='sgd', activation='logistic', learning_rate='invscaling', max_iter=1000, verbose=True,
+                        power_t=0.1, momentum=0.1, nesterovs_momentum=True, learning_rate_init=0.1)
+    
+    clf.fit(X_train_std, y_train)
+    
+    print(clf.score(X_test_std, y_test))
+    
+    #pred = clf.predict(X_test_std)
+
+    #kaggle = np.column_stack((np.arange(1, pred.shape[0]+1, 1), pred))
+    #df = pd.DataFrame(kaggle)
+    #df.columns = ['ImageId','Label']
+    #df.to_csv("digits.csv", index=False)
 
 
 
@@ -591,4 +739,4 @@ def bug():
         clf.fit(X, y)
 
 if __name__ == '__main__':
-    nn4()
+    nn5_kaggle()
